@@ -8,6 +8,9 @@ const expenseList = document.getElementById("expenseList")
 const transactionList = document.getElementById("transactionList")
 const balance = document.getElementById("balance")
 
+incomeBtn.addEventListener("click", addToIncome)
+expenseBtn.addEventListener("click", addToExpense)
+
 let incomeArray = []
 let expenseArray = []
 
@@ -17,31 +20,20 @@ function addToIncome(){
     const belopp = Number(amount.value)
     const object = { beskrivning, belopp }
 
-    if (incomeArray.length > 0) {
-        for (const item of incomeArray) {
-            if (item.beskrivning === beskrivning) {
-                item.belopp = belopp
-            } else {
-                incomeArray.push(object)
-            }
-        } 
+    const existing = incomeArray.find(item => item.beskrivning === beskrivning)
+    if (existing) {
+        existing.belopp = belopp
     } else {
-        incomeArray.push(object) 
+        incomeArray.push(object)
     }
 
-    displayIncome()
+    display('incomeList', incomeArray, 'Inkomst')
 
     resetInputs()
 
     calculateBalance()
 }
 
-function displayIncome() {
-    document.getElementById('incomeList').innerHTML = '' 
-    for (const object of incomeArray) {
-        document.getElementById('incomeList').innerHTML += '<li>' + object.beskrivning + ': ' + object.belopp + '</li>'
-    }
-}
 
 function resetInputs() {
     desc.value = ''
@@ -53,19 +45,14 @@ function addToExpense() {
     const belopp = Number(amount.value)
     const object = { beskrivning, belopp }
 
-    if (expenseArray.length > 0) {
-        for (const item of expenseArray) {
-            if (item.beskrivning === beskrivning) {
-                item.belopp = belopp
-            } else {
-                expenseArray.push(object)
-            }
-        } 
+    const existing = expenseArray.find(item => item.beskrivning === beskrivning)
+    if (existing) {
+        existing.belopp = belopp
     } else {
-        expenseArray.push(object) 
+        expenseArray.push(object)
     }
 
-    displayExpense()
+    display('expenseList', expenseArray, 'Utgift')
 
     resetInputs()
 
@@ -88,9 +75,9 @@ function calculateBalance() {
     document.getElementById('balance').innerHTML = balanceValue
 }
 
-function displayExpense() {
-    document.getElementById('expenseList').innerHTML = '' 
-    for (const object of expenseArray) {
-        document.getElementById('expenseList').innerHTML += '<li>' + object.beskrivning + ': ' + object.belopp + '</li>'
+function display(elemantId, items, description) {
+    document.getElementById(elemantId).innerHTML = ''
+    for (const object of items) {
+        document.getElementById(elemantId).innerHTML += '<li>' + object.beskrivning + ' - ' + object.belopp + ` kr (${description})` + '</li>'
     }
 }
